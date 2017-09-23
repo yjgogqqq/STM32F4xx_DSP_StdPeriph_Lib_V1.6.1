@@ -1,0 +1,10 @@
+/MDK-ARM/STM32F40_41xxx
+/MDK-ARM/STM32F410xx
+*.uvguix.*
+#*.o
+#*.d
+#*.axf
+#*.htm
+#*.map
+#*.crf
+#*.lst
