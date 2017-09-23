@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    Project/STM32F4xx_StdPeriph_Templates/stm32f4xx_it.h 
+  * @file    CAN/CAN_Networking/stm32f4xx_it.h 
   * @author  MCD Application Team
   * @version V1.6.1
   * @date    21-October-2015
@@ -50,6 +50,8 @@ void SVC_Handler(void);
 void DebugMon_Handler(void);
 void PendSV_Handler(void);
 void SysTick_Handler(void);
+void CAN1_RX0_IRQHandler(void);
+void CAN2_RX0_IRQHandler(void);
 
 #ifdef __cplusplus
 }

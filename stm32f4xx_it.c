@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    Project/STM32F4xx_StdPeriph_Templates/stm32f4xx_it.c 
+  * @file    CAN/CAN_Networking/stm32f4xx_it.c 
   * @author  MCD Application Team
   * @version V1.6.1
   * @date    21-October-2015
@@ -31,14 +31,21 @@
 #include "stm32f4xx_it.h"
 #include "main.h"
 
-/** @addtogroup Template_Project
+/** @addtogroup STM32F4xx_StdPeriph_Examples
   * @{
   */
+
+/** @addtogroup CAN_Networking
+  * @{
+  */ 
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
+CanRxMsg RxMessage;
+extern uint8_t ubKeyNumber;
+
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
@@ -47,7 +54,7 @@
 /******************************************************************************/
 
 /**
-  * @brief  This function handles NMI exception.
+  * @brief   This function handles NMI exception.
   * @param  None
   * @retval None
   */
@@ -141,28 +148,31 @@ void PendSV_Handler(void)
   */
 void SysTick_Handler(void)
 {
-  TimingDelay_Decrement();
+	TimingDelay_Decrement();
 }
 
 /******************************************************************************/
 /*                 STM32F4xx Peripherals Interrupt Handlers                   */
 /*  Add here the Interrupt Handler for the used peripheral(s) (PPP), for the  */
 /*  available peripheral interrupt handler's name please refer to the startup */
-/*  file (startup_stm32f4xx.s).                                               */
+/*  file (startup_stm32f40xx.s/startup_stm32f427x.s).                         */
 /******************************************************************************/
 
 /**
-  * @brief  This function handles PPP interrupt request.
+  * @brief  This function handles CAN1 RX0 request.
   * @param  None
   * @retval None
   */
-/*void PPP_IRQHandler(void)
+void CAN1_RX0_IRQHandler(void)
 {
-}*/
+}
 
 /**
   * @}
   */ 
 
+/**
+  * @}
+  */ 
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
