@@ -1185,14 +1185,14 @@
               <FilePath>..\stm32f4xx_it.c</FilePath>
             </File>
             <File>
-              <FileName>stm324xg_eval.c</FileName>
+              <FileName>DrivingSimulator_DAQ.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\Utilities\STM32_EVAL\STM3240_41_G_EVAL\stm324xg_eval.c</FilePath>
+              <FilePath>..\Motus\DrivingSimulator_DAQ\DrivingSimulator_DAQ.c</FilePath>
             </File>
             <File>
-              <FileName>StepperMotor.c</FileName>
+              <FileName>MT_CommonFunction.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\StepperMotor.c</FilePath>
+              <FilePath>..\Motus\src\MT_CommonFunction.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2380,14 +2380,14 @@
               <FilePath>..\stm32f4xx_it.c</FilePath>
             </File>
             <File>
-              <FileName>stm324xg_eval.c</FileName>
+              <FileName>DrivingSimulator_DAQ.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\Utilities\STM32_EVAL\STM3240_41_G_EVAL\stm324xg_eval.c</FilePath>
+              <FilePath>..\Motus\DrivingSimulator_DAQ\DrivingSimulator_DAQ.c</FilePath>
             </File>
             <File>
-              <FileName>StepperMotor.c</FileName>
+              <FileName>MT_CommonFunction.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\StepperMotor.c</FilePath>
+              <FilePath>..\Motus\src\MT_CommonFunction.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2441,7 +2441,7 @@
           <OutputName>STM32F40_41xxx</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
-          <CreateHexFile>1</CreateHexFile>
+          <CreateHexFile>0</CreateHexFile>
           <DebugInformation>1</DebugInformation>
           <BrowseInformation>1</BrowseInformation>
           <ListingPath>.\STM32F40_41xxx\</ListingPath>
@@ -2725,7 +2725,7 @@
               <MiscControls>--C99</MiscControls>
               <Define>USE_STDPERIPH_DRIVER,STM32F40_41xxx,USE_STM324xG_EVAL</Define>
               <Undefine></Undefine>
-              <IncludePath>..\;..\..\..\Libraries\CMSIS\Device\ST\STM32F4xx\Include;..\..\..\Libraries\STM32F4xx_StdPeriph_Driver\inc;..\..\..\Utilities\STM32_EVAL\Common;..\..\..\Utilities\STM32_EVAL\STM3240_41_G_EVAL</IncludePath>
+              <IncludePath>..\;..\..\..\Libraries\CMSIS\Device\ST\STM32F4xx\Include;..\..\..\Libraries\STM32F4xx_StdPeriph_Driver\inc;..\..\..\Utilities\STM32_EVAL\Common;..\..\..\Utilities\STM32_EVAL\STM3240_41_G_EVAL;..\..\..\Project\STM32F4xx_StdPeriph_Templates\Motus\DrivingSimulator_DAQ;..\..\..\Project\STM32F4xx_StdPeriph_Templates\Motus\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -3576,14 +3576,14 @@
               <FilePath>..\stm32f4xx_it.c</FilePath>
             </File>
             <File>
-              <FileName>stm324xg_eval.c</FileName>
+              <FileName>DrivingSimulator_DAQ.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\Utilities\STM32_EVAL\STM3240_41_G_EVAL\stm324xg_eval.c</FilePath>
+              <FilePath>..\Motus\DrivingSimulator_DAQ\DrivingSimulator_DAQ.c</FilePath>
             </File>
             <File>
-              <FileName>StepperMotor.c</FileName>
+              <FileName>MT_CommonFunction.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\StepperMotor.c</FilePath>
+              <FilePath>..\Motus\src\MT_CommonFunction.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -4821,14 +4821,14 @@
               <FilePath>..\stm32f4xx_it.c</FilePath>
             </File>
             <File>
-              <FileName>stm324xg_eval.c</FileName>
+              <FileName>DrivingSimulator_DAQ.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\Utilities\STM32_EVAL\STM3240_41_G_EVAL\stm324xg_eval.c</FilePath>
+              <FilePath>..\Motus\DrivingSimulator_DAQ\DrivingSimulator_DAQ.c</FilePath>
             </File>
             <File>
-              <FileName>StepperMotor.c</FileName>
+              <FileName>MT_CommonFunction.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\StepperMotor.c</FilePath>
+              <FilePath>..\Motus\src\MT_CommonFunction.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -6016,14 +6016,14 @@
               <FilePath>..\stm32f4xx_it.c</FilePath>
             </File>
             <File>
-              <FileName>stm324xg_eval.c</FileName>
+              <FileName>DrivingSimulator_DAQ.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\Utilities\STM32_EVAL\STM3240_41_G_EVAL\stm324xg_eval.c</FilePath>
+              <FilePath>..\Motus\DrivingSimulator_DAQ\DrivingSimulator_DAQ.c</FilePath>
             </File>
             <File>
-              <FileName>StepperMotor.c</FileName>
+              <FileName>MT_CommonFunction.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\StepperMotor.c</FilePath>
+              <FilePath>..\Motus\src\MT_CommonFunction.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -7111,14 +7111,14 @@
               <FilePath>..\stm32f4xx_it.c</FilePath>
             </File>
             <File>
-              <FileName>stm324xg_eval.c</FileName>
+              <FileName>DrivingSimulator_DAQ.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\Utilities\STM32_EVAL\STM3240_41_G_EVAL\stm324xg_eval.c</FilePath>
+              <FilePath>..\Motus\DrivingSimulator_DAQ\DrivingSimulator_DAQ.c</FilePath>
             </File>
             <File>
-              <FileName>StepperMotor.c</FileName>
+              <FileName>MT_CommonFunction.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\StepperMotor.c</FilePath>
+              <FilePath>..\Motus\src\MT_CommonFunction.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -8206,14 +8206,14 @@
               <FilePath>..\stm32f4xx_it.c</FilePath>
             </File>
             <File>
-              <FileName>stm324xg_eval.c</FileName>
+              <FileName>DrivingSimulator_DAQ.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\Utilities\STM32_EVAL\STM3240_41_G_EVAL\stm324xg_eval.c</FilePath>
+              <FilePath>..\Motus\DrivingSimulator_DAQ\DrivingSimulator_DAQ.c</FilePath>
             </File>
             <File>
-              <FileName>StepperMotor.c</FileName>
+              <FileName>MT_CommonFunction.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\StepperMotor.c</FilePath>
+              <FilePath>..\Motus\src\MT_CommonFunction.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -9251,14 +9251,14 @@
               <FilePath>..\stm32f4xx_it.c</FilePath>
             </File>
             <File>
-              <FileName>stm324xg_eval.c</FileName>
+              <FileName>DrivingSimulator_DAQ.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\Utilities\STM32_EVAL\STM3240_41_G_EVAL\stm324xg_eval.c</FilePath>
+              <FilePath>..\Motus\DrivingSimulator_DAQ\DrivingSimulator_DAQ.c</FilePath>
             </File>
             <File>
-              <FileName>StepperMotor.c</FileName>
+              <FileName>MT_CommonFunction.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\StepperMotor.c</FilePath>
+              <FilePath>..\Motus\src\MT_CommonFunction.c</FilePath>
             </File>
           </Files>
         </Group>

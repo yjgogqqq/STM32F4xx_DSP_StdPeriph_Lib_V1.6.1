@@ -30,6 +30,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_it.h"
 #include "main.h"
+#include "MT_CommonFunction.h"
 
 /** @addtogroup STM32F4xx_StdPeriph_Examples
   * @{
@@ -43,8 +44,6 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-CanRxMsg RxMessage;
-extern uint8_t ubKeyNumber;
 
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
@@ -157,7 +156,21 @@ void SysTick_Handler(void)
 /*  available peripheral interrupt handler's name please refer to the startup */
 /*  file (startup_stm32f40xx.s/startup_stm32f427x.s).                         */
 /******************************************************************************/
-
+void TIM2_IRQHandler(void)
+{
+	static u32 time_count=0;
+	if ( TIM_GetITStatus(TIM2 , TIM_IT_Update) != RESET ) 
+	{
+		TIM_ClearITPendingBit(TIM2 , TIM_FLAG_Update);
+		time_count++;
+		
+		if(time_count%10==0)
+	 	{	
+	    	Tim2_Flag =1;
+	 	}	
+		
+  }
+}
 /**
   * @brief  This function handles CAN1 RX0 request.
   * @param  None
@@ -165,7 +178,13 @@ void SysTick_Handler(void)
   */
 void CAN1_RX0_IRQHandler(void)
 {
+  //CAN_Receive(CAN1, CAN_FIFO0, &RxMessage);  
 }
+/**
+  * @brief  This function handles CAN1 RX0 request.
+  * @param  None
+  * @retval None
+  */
 
 /**
   * @}
