@@ -57,6 +57,7 @@
 #include "DrivingSimulator_DAQ.h"
 #include "MT_CommonFunction.h"
 #include "stdio.h"
+#include "main.h"
 /** @addtogroup Motus_Driver
   * @{
   */
@@ -244,6 +245,31 @@ unsigned char InputDebounce(unsigned char *t_value,GPIO_TypeDef* GPIOx, uint16_t
 	}
 }
 
+unsigned char PedalValueProcess(unsigned char adcInitialValue,unsigned char adcCurrentValue)
+{
+  short          t_Difference=0;
+  const unsigned char  MinThrottle=110;
+  const unsigned char  MinBrake=110;
+  const unsigned char  MinClutch=110;
+  const unsigned char MinPedalValue=110;
+  t_Difference = adcInitialValue- adcCurrentValue;
+  if(0>t_Difference)
+  {
+    return 0;
+  }
+  else
+  {
+    if(49<=t_Difference)
+    {
+      return 100;
+    }
+    else
+    {
+      return (t_Difference/0.5);
+    }
+  }
+}
+
 int DrivingSimulator_DAQ_Main(void)
 {
 	/*!< At this stage the microcontroller clock setting is already configured, 
@@ -255,6 +281,9 @@ int DrivingSimulator_DAQ_Main(void)
      */
 	unsigned int tADC_Value[16]={0};
 	unsigned short ADC_Value[16]={0};
+	unsigned short AdcInitialValue[16]={0};
+
+
 	unsigned short Timing1=0;
 	
 	unsigned char ucSmallLigh=0;
@@ -367,7 +396,7 @@ int DrivingSimulator_DAQ_Main(void)
   
   int iBreathLightTiming=0;
   CanTxMsg TxMessageForIO;
-  CanTxMsg TxForAD_FistSet;
+  CanTxMsg TxForAD_FirstSet;
   CanTxMsg TxForAD_SecondSet;
 	/* NVIC configuration */
 	NVIC_Config();
@@ -377,7 +406,7 @@ int DrivingSimulator_DAQ_Main(void)
 	Analog_Input_Init();
 	/* CAN configuration */
 	CAN_BSP_Config();
-	DebugComPort_Init(USART3);
+	DebugComPort_Init(USART1);
 	TIM_Configuration();
   LED_Init();
   /* Transmit Structure preparation */
@@ -387,20 +416,34 @@ int DrivingSimulator_DAQ_Main(void)
   TxMessageForIO.IDE = CAN_ID_STD;
   TxMessageForIO.DLC = 8;
   
-  TxForAD_FistSet.StdId = 0x188;
-  TxForAD_FistSet.ExtId = 0x00;
-  TxForAD_FistSet.RTR = CAN_RTR_DATA;
-  TxForAD_FistSet.IDE = CAN_ID_STD;
-  TxForAD_FistSet.DLC = 8;
+  TxForAD_FirstSet.StdId = 0x188;
+  TxForAD_FirstSet.ExtId = 0x00;
+  TxForAD_FirstSet.RTR = CAN_RTR_DATA;
+  TxForAD_FirstSet.IDE = CAN_ID_STD;
+  TxForAD_FirstSet.DLC = 8;
   
-  TxForAD_FistSet.StdId = 0x189;
-  TxForAD_FistSet.ExtId = 0x00;
-  TxForAD_FistSet.RTR = CAN_RTR_DATA;
-  TxForAD_FistSet.IDE = CAN_ID_STD;
-  TxForAD_FistSet.DLC = 8;
+  TxForAD_SecondSet.StdId = 0x189;
+  TxForAD_SecondSet.ExtId = 0x00;
+  TxForAD_SecondSet.RTR = CAN_RTR_DATA;
+  TxForAD_SecondSet.IDE = CAN_ID_STD;
+  TxForAD_SecondSet.DLC = 8;
   
   DAQ_LED1_STATUS_SET(0);
   DAQ_LED2_STATUS_SET(1);
+  //Get ADC Initial Value
+	for(int i=0;i<AD_NUMBER_OF_TIMES;i++)
+	{
+    for(int j=0;j<16;j++)
+    {
+      tADC_Value[j]+=(Get_AdcExpansion(j)>>4);
+    }
+		Delay(10);
+	}
+  for(int i=0;i<16;i++)
+  {
+    AdcInitialValue[i]=180;//tADC_Value[i]/AD_NUMBER_OF_TIMES-5;
+    tADC_Value[i]=0;
+  }
 	while(1)
 	{
 		if(1==Tim2_Flag)
@@ -419,8 +462,8 @@ int DrivingSimulator_DAQ_Main(void)
 			ucFarLight				  =InputDebounce(&t_ucFarLight,FAR_LIGHT_SW_PIN);
 			ucShortLight			  =InputDebounce(&t_ucShortLight,SHORT_LIGHT_SW_PIN);
 			ucLeftTurnLight		  =InputDebounce(&t_ucLeftTurnLight,LEFT_TURN_LIGHT_SW_PIN);
-			ucRightTurnLight	  =InputDebounce(&ucRightTurnLight,RIGHT_TURN_LIGHT_SW_PIN);
-			ucFogLight				  =InputDebounce(&ucFogLight,FOG_LIGHT_SW_PIN);
+			ucRightTurnLight	  =InputDebounce(&t_ucRightTurnLight,RIGHT_TURN_LIGHT_SW_PIN);
+			ucFogLight				  =InputDebounce(&t_ucFogLight,FOG_LIGHT_SW_PIN);
 			TxMessageForIO.Data[0]= (ucFogLight<<7)|(ucRightTurnLight<<6)|(ucLeftTurnLight<<5)|(ucShortLight<<4)| \
                               (ucFarLight<<3)|(unAutoLight<<2)|(ucLargeLight<<1)|(ucSmallLigh<<0);
       
@@ -495,18 +538,40 @@ int DrivingSimulator_DAQ_Main(void)
 				}
         for(int i=0;i<8;i++)
         {
-          TxForAD_FistSet.Data[i]=ADC_Value[i];
+          TxForAD_FirstSet.Data[i]=ADC_Value[i];
         }
-        CAN_Transmit(CAN1, &TxForAD_FistSet);
-        for(int i=8;i<16;i++)
+        TxForAD_FirstSet.Data[1]=PedalValueProcess(180,TxForAD_FirstSet.Data[1]);//acc
+        CAN_Transmit(CAN1, &TxForAD_FirstSet);
+        
+        for(int i=0;i<8;i++)
         {
-          TxForAD_SecondSet.Data[i]=ADC_Value[i];
+          TxForAD_SecondSet.Data[i]=ADC_Value[i+8];
         }
+				if(50<TxForAD_SecondSet.Data[PARKING_BRAKE-8])
+				{
+					TxForAD_SecondSet.Data[PARKING_BRAKE-8]=1;
+				}
+				else
+				{
+					TxForAD_SecondSet.Data[PARKING_BRAKE-8]=0;
+				}
+        TxForAD_SecondSet.Data[CLUTCH-8]=100-PedalValueProcess(180,TxForAD_SecondSet.Data[CLUTCH-8]);
+        TxForAD_SecondSet.Data[BRAKE-8]=PedalValueProcess(180,TxForAD_SecondSet.Data[BRAKE-8]);
         CAN_Transmit(CAN1, &TxForAD_SecondSet);
+				printf("TxMessageForIO.Data[0] is %4x;\r\n",TxMessageForIO.Data[0]);
+				printf("TxMessageForIO.Data[1] is %4x;\r\n",TxMessageForIO.Data[1]);
         printf("TxMessageForIO.Data[2] is %4x;\r\n",TxMessageForIO.Data[2]);
         printf("TxMessageForIO.Data[3] is %4x;\r\n",TxMessageForIO.Data[3]);
+				printf("TxMessageForIO.Data[4] is %4x;\r\n",TxMessageForIO.Data[4]);
+				printf("TxMessageForIO.Data[5] is %4x;\r\n",TxMessageForIO.Data[5]);
 				printf("ADC_Value[WIPER_INT_TIME] is %4d;\r\n",ADC_Value[WIPER_INT_TIME]);
 				printf("ADC_Value[PARKING_BRAKE] is %4d;\r\n",ADC_Value[PARKING_BRAKE]);
+				
+				printf("ADC_Value[CLUTCH] is %4d;\r\n",ADC_Value[CLUTCH]);
+				printf("ADC_Value[BRAKE] is %4d;\r\n",ADC_Value[BRAKE]);
+				printf("ADC_Value[ACCELERATOR_PEDAL] is %4d;\r\n",ADC_Value[ACCELERATOR_PEDAL]);
+				printf("ADC_Value[INDOOR_REARVIEW_X_AXIS] is %4d;\r\n",ADC_Value[INDOOR_REARVIEW_X_AXIS]);
+				printf("ADC_Value[INDOOR_REARVIEW_Y_AXIS] is %4d;\r\n",ADC_Value[INDOOR_REARVIEW_Y_AXIS]);
 			}
 		}
 	}

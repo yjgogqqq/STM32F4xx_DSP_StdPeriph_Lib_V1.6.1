@@ -27,7 +27,6 @@
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __DRIVINGSIMULATOR_DAQ_H
 #define __DRIVINGSIMULATOR_DAQ_H
-
 #ifdef __cplusplus
  extern "C" {
 #endif
@@ -76,22 +75,22 @@
 #define		AD_RESERVE2_PIN																GPIOB, GPIO_Pin_0
 #define		AD_RESERVE3_PIN																GPIOB, GPIO_Pin_1
 
-#define		WIPER_INT_TIME														10
-#define		PARKING_BRAKE															11
-#define		CLUTCH																		12
-#define		BRAKE																			13                                                       
-#define		ACCELERATOR_PEDAL													0
-#define		SEAT_ADJUST																1                                                        
-#define		INDOOR_REARVIEW_X_AXIS										2
-#define		INDOOR_REARVIEW_Y_AXIS										3                                                      
-#define		LEFT_REARVIEW_X_AXIS											4
-#define		LEFT_REARVIEW_Y_AXIS											5                                                         
-#define		RIGHT_REARVIEW_X_AXIS											6
-#define		RIGHT_REARVIEW_Y_AXIS											7
-#define		AD_RESERVE0																14
-#define		AD_RESERVE1																15                                                          
-#define		AD_RESERVE2																8
-#define		AD_RESERVE3																9
+#define		WIPER_INT_TIME														11
+#define		PARKING_BRAKE															10
+#define		CLUTCH																		13 
+#define		BRAKE																			12                                                      
+#define		ACCELERATOR_PEDAL													1
+#define		SEAT_ADJUST																0                                                        
+#define		INDOOR_REARVIEW_X_AXIS										3
+#define		INDOOR_REARVIEW_Y_AXIS										2                                                      
+#define		LEFT_REARVIEW_X_AXIS											5
+#define		LEFT_REARVIEW_Y_AXIS											4                                                         
+#define		RIGHT_REARVIEW_X_AXIS											7
+#define		RIGHT_REARVIEW_Y_AXIS											6
+#define		AD_RESERVE0																15
+#define		AD_RESERVE1																14                                                          
+#define		AD_RESERVE2																9
+#define		AD_RESERVE3																8
 
 
 //D_IO		 ‰»Î ‰≥ˆ“˝Ω≈
@@ -118,13 +117,13 @@
 #define		BACK_WIPER_INT_STATE_PIN											GPIOD, GPIO_Pin_13
 #define		BACK_WIPER_ON_STATE_PIN												GPIOD, GPIO_Pin_14
 #define		BACK_WIPER_SPRAYER_STATE_PIN									GPIOD, GPIO_Pin_15
-#define		FIRST_GEAR_PIN																GPIOC, GPIO_Pin_6
-#define		SECOND_GEAR_PIN																GPIOC, GPIO_Pin_7
-#define		THIRD_GEAR_PIN																GPIOC, GPIO_Pin_8
+#define		SECOND_GEAR_PIN																GPIOC, GPIO_Pin_6
+#define		FOURTH_GEAR_PIN																GPIOC, GPIO_Pin_7
+#define		REVERSE_GEAR_PIN																GPIOC, GPIO_Pin_8
 
-#define		FOURTH_GEAR_PIN																GPIOC, GPIO_Pin_9
-#define		FIFTH_GEAR_PIN																GPIOA, GPIO_Pin_8
-#define		REVERSE_GEAR_PIN															GPIOA, GPIO_Pin_11
+#define		FIFTH_GEAR_PIN																GPIOC, GPIO_Pin_9
+#define		THIRD_GEAR_PIN																GPIOA, GPIO_Pin_8
+#define		FIRST_GEAR_PIN															GPIOA, GPIO_Pin_11
 #define		SAFETY_BELT_PIN																GPIOA, GPIO_Pin_12
 #define		HAZARD_WARNING_LAMP_PIN												GPIOC, GPIO_Pin_10
 #define		RESERVE0_PIN																	GPIOC, GPIO_Pin_11
