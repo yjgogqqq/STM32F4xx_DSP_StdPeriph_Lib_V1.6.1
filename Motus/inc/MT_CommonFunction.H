@@ -71,6 +71,7 @@ typedef enum
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
 void NVIC_Config(void);
+void DebugComPort_Init(USART_TypeDef* USARTx);
 void CAN_BSP_Config(void);
 void TIM_Configuration(void);
 //void TIM2_IRQHandler(void);

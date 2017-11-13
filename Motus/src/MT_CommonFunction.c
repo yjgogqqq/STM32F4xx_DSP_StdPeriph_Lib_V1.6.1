@@ -72,6 +72,7 @@
 CanTxMsg TxMessage;
 CanRxMsg RxMessage;
 __IO u8 Tim2_Flag=0;
+USART_TypeDef* CurrentUSARTx;
 /* Private function prototypes -----------------------------------------------*/
 #ifdef __GNUC__
   /* With GCC/RAISONANCE, small printf (option LD Linker->Libraries->Small printf
@@ -107,10 +108,10 @@ PUTCHAR_PROTOTYPE
 {
   /* Place your implementation of fputc here */
   /* e.g. write a character to the USART */
-  USART_SendData(USART1, (uint8_t) ch);
+  USART_SendData(CurrentUSARTx, (uint8_t) ch);
 
   /* Loop until the end of transmission */
-  while (USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET)
+  while (USART_GetFlagStatus(CurrentUSARTx, USART_FLAG_TC) == RESET)
   {}
 
   return ch;
@@ -238,7 +239,108 @@ void LED_Display(uint8_t Ledstatus)
 {
 	
 }
+/**
+  * @brief  Initialize COM1 interface for serial debug
+  * @note   COM1 interface is defined in stm3210g_eval.h file (under Utilities\STM32_EVAL\STM324xG_EVAL)  
+  * @param  None
+  * @retval None
+  */
+void DebugComPort_Init(USART_TypeDef* USARTx)
+{
+  CurrentUSARTx=USARTx;
+  if(USART1==USARTx)
+  {
+    USART_InitTypeDef USART_InitStructure;
+    USART_ClockInitTypeDef  USART_ClockInitStructure;
+    GPIO_InitTypeDef GPIO_InitStructure;
+    
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);
+    
+    GPIO_PinAFConfig(GPIOA, GPIO_PinSource9, GPIO_AF_USART1);
+    /* Connect PXx to USARTx_Rx*/
+    GPIO_PinAFConfig(GPIOA, GPIO_PinSource10, GPIO_AF_USART1);
+    /* Configure USARTx_Tx as alternate function push-pull */
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
+    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_Init(GPIOA, &GPIO_InitStructure);
+    /* Configure USARTx_Rx as input floating */
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+    GPIO_Init(GPIOA, &GPIO_InitStructure);
+    
+    USART_InitStructure.USART_BaudRate =115200;
+    USART_InitStructure.USART_WordLength = USART_WordLength_8b;
+    USART_InitStructure.USART_StopBits = USART_StopBits_1;
+    USART_InitStructure.USART_Parity = USART_Parity_No;
+    USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+    USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
 
+    USART_Init(USART1, &USART_InitStructure);
+    USART_Cmd(USART1, ENABLE); 
+  }
+  else if(USART3==USARTx)
+  {
+    USART_InitTypeDef USART_InitStructure;
+    USART_ClockInitTypeDef  USART_ClockInitStructure;
+    GPIO_InitTypeDef GPIO_InitStructure;
+    
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3, ENABLE);
+    
+    GPIO_PinAFConfig(GPIOD, GPIO_PinSource8, GPIO_AF_USART3);
+    /* Connect PXx to USARTx_Rx*/
+    GPIO_PinAFConfig(GPIOD, GPIO_PinSource9, GPIO_AF_USART3);
+    /* Configure USARTx_Tx as alternate function push-pull */
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8;
+    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_Init(GPIOD, &GPIO_InitStructure);
+    /* Configure USARTx_Rx as input floating */
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+    GPIO_Init(GPIOD, &GPIO_InitStructure);
+    
+    USART_InitStructure.USART_BaudRate =115200;
+    USART_InitStructure.USART_WordLength = USART_WordLength_8b;
+    USART_InitStructure.USART_StopBits = USART_StopBits_1;
+    USART_InitStructure.USART_Parity = USART_Parity_No;
+    USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+    USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
+
+    USART_Init(USART3, &USART_InitStructure);
+    USART_Cmd(USART3, ENABLE); 
+  }
+}
+
+/**
+  * @brief  Retargets the C library printf function to the USART.
+  * @param  None
+  * @retval None
+  */
+u8 Uart_PutChar(u8 ch)
+{
+    
+	USART_SendData(USART1, (u8) ch);
+        while (USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET)
+    {}
+	return ch;
+
+}
+void Uart_PutString(u8 buf[],u16 len)
+{
+    u16 i;
+    for( i=0;i<len;i++)
+    {
+        Uart_PutChar(*buf++);
+	}
+
+}
 
 /**
   * @}

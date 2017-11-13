@@ -206,8 +206,8 @@
 #define		DAQ_LED1_STATUS_SET(X)												GPIO_WriteBit(GPIOC, GPIO_Pin_14, X)
 #define		DAQ_LED2_STATUS_SET(X)												GPIO_WriteBit(GPIOC, GPIO_Pin_15, X)
 
-#define		DAQ_LED1_TOGGLE												GPIO_ToggleBits(GPIOC, GPIO_Pin_14)
-#define		DAQ_LED2_TOGGLE												GPIO_ToggleBits(GPIOC, GPIO_Pin_15)
+#define		DAQ_LED1_TOGGLE												        GPIO_ToggleBits(GPIOC, GPIO_Pin_14)
+#define		DAQ_LED2_TOGGLE												        GPIO_ToggleBits(GPIOC, GPIO_Pin_15)
 //USART3	串口3对应的引脚
 #define		U3_RXD																				GPIOC, GPIO_Pin_14
 #define		U3_TXD																				GPIOC, GPIO_Pin_15

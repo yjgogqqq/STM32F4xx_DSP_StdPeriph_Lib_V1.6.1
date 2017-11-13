@@ -212,74 +212,21 @@ u16 Get_AdcExpansion(u8 ch)
 	return ADC_GetConversionValue(ADC1);	//返回最近一次ADC1规则组的转换结果
 }
 
-/**
-  * @brief  Initialize COM1 interface for serial debug
-  * @note   COM1 interface is defined in stm3210g_eval.h file (under Utilities\STM32_EVAL\STM324xG_EVAL)  
-  * @param  None
-  * @retval None
-  */
-void DebugComPort_Init(void)
-{
-  USART_InitTypeDef USART_InitStructure;
-	USART_ClockInitTypeDef  USART_ClockInitStructure;
-  GPIO_InitTypeDef GPIO_InitStructure;
-	
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);
-	
-	GPIO_PinAFConfig(GPIOA, GPIO_PinSource9, GPIO_AF_USART1);
-	/* Connect PXx to USARTx_Rx*/
-  GPIO_PinAFConfig(GPIOA, GPIO_PinSource10, GPIO_AF_USART1);
-  /* Configure USARTx_Tx as alternate function push-pull */
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
-  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-  GPIO_Init(GPIOA, &GPIO_InitStructure);
-  /* Configure USARTx_Rx as input floating */
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
-  GPIO_Init(GPIOA, &GPIO_InitStructure);
-	
-  USART_InitStructure.USART_BaudRate =115200;
-  USART_InitStructure.USART_WordLength = USART_WordLength_8b;
-  USART_InitStructure.USART_StopBits = USART_StopBits_1;
-  USART_InitStructure.USART_Parity = USART_Parity_No;
-  USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
-  USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
-
-  USART_Init(USART1, &USART_InitStructure);
-  USART_Cmd(USART1, ENABLE); 
-}
-
-/**
-  * @brief  Retargets the C library printf function to the USART.
-  * @param  None
-  * @retval None
-  */
-u8 Uart_PutChar(u8 ch)
-{
-    
-	USART_SendData(USART1, (u8) ch);
-        while (USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET)
-    {}
-	return ch;
-
-}
-void Uart_PutString(u8 buf[],u16 len)
-{
-    u16 i;
-    for( i=0;i<len;i++)
-    {
-        Uart_PutChar(*buf++);
-	}
-
-}
 
 void LED_Init()
 {
 	GPIO_InitTypeDef  GPIO_InitStructure;
+  /* GPIOC Peripheral clock enable */
+  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);
+  
+  /* Configure PC14 and PC15 in output pushpull mode */
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_14 | GPIO_Pin_15;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+  GPIO_Init(GPIOC, &GPIO_InitStructure);
+
 }
 
 unsigned char InputDebounce(unsigned char *t_value,GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin)
@@ -418,6 +365,7 @@ int DrivingSimulator_DAQ_Main(void)
 	unsigned char	t_ucReserve17=0;
 	unsigned char	t_ucReserve18=0;
   
+  int iBreathLightTiming=0;
   CanTxMsg TxMessageForIO;
   CanTxMsg TxForAD_FistSet;
   CanTxMsg TxForAD_SecondSet;
@@ -429,8 +377,9 @@ int DrivingSimulator_DAQ_Main(void)
 	Analog_Input_Init();
 	/* CAN configuration */
 	CAN_BSP_Config();
-	DebugComPort_Init();
+	DebugComPort_Init(USART3);
 	TIM_Configuration();
+  LED_Init();
   /* Transmit Structure preparation */
   TxMessageForIO.StdId = 0x187;
   TxMessageForIO.ExtId = 0x00;
@@ -450,13 +399,20 @@ int DrivingSimulator_DAQ_Main(void)
   TxForAD_FistSet.IDE = CAN_ID_STD;
   TxForAD_FistSet.DLC = 8;
   
-  
+  DAQ_LED1_STATUS_SET(0);
+  DAQ_LED2_STATUS_SET(1);
 	while(1)
 	{
 		if(1==Tim2_Flag)
 		{
 			Tim2_Flag=0;
-      
+      iBreathLightTiming++;
+      if(50<=iBreathLightTiming)
+      {
+        iBreathLightTiming=0;
+        DAQ_LED1_TOGGLE;
+        DAQ_LED2_TOGGLE;
+      }
 			ucSmallLigh				  =InputDebounce(&t_ucSmallLigh,SMALL_LIGHT_SW_PIN);
 			ucLargeLight			  =InputDebounce(&t_ucLargeLight,LARGE_LIGHT_SW_PIN);
 			unAutoLight				  =InputDebounce(&t_unAutoLight,AUTO_LIGHT_SW_PIN);
@@ -547,8 +503,10 @@ int DrivingSimulator_DAQ_Main(void)
           TxForAD_SecondSet.Data[i]=ADC_Value[i];
         }
         CAN_Transmit(CAN1, &TxForAD_SecondSet);
+        printf("TxMessageForIO.Data[2] is %4x;\r\n",TxMessageForIO.Data[2]);
+        printf("TxMessageForIO.Data[3] is %4x;\r\n",TxMessageForIO.Data[3]);
 				printf("ADC_Value[WIPER_INT_TIME] is %4d;\r\n",ADC_Value[WIPER_INT_TIME]);
-				printf("ADC_Value[WIPER_INT_TIME] is %4d;\r\n",ADC_Value[PARKING_BRAKE]);
+				printf("ADC_Value[PARKING_BRAKE] is %4d;\r\n",ADC_Value[PARKING_BRAKE]);
 			}
 		}
 	}
