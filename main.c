@@ -49,7 +49,7 @@ static __IO uint32_t uwTimingDelay;
 
 //static void Delay(void);
 void Init_RxMes(CanRxMsg *RxMessage);
-static void Delay(__IO uint32_t nTime);
+void Delay(__IO uint32_t nTime);
 /* Private functions ---------------------------------------------------------*/
 
 /**
