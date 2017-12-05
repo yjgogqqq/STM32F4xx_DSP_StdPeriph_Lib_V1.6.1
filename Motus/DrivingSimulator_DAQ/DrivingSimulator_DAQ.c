@@ -492,7 +492,7 @@ int DrivingSimulator_DAQ_Main(void)
 			ucFourthGear			  =InputDebounce(&t_ucFourthGear,FOURTH_GEAR_PIN);
 			ucFifthGear         =InputDebounce(&t_ucFifthGear,FIFTH_GEAR_PIN);
 			ucReverseGear       =InputDebounce(&t_ucReverseGear,REVERSE_GEAR_PIN);
-			ucSafetyBelt        =InputDebounce(&t_ucSafetyBelt,SAFETY_BELT_PIN);
+			ucSafetyBelt        =!(InputDebounce(&t_ucSafetyBelt,SAFETY_BELT_PIN));
 			ucHazardWarningLamp =InputDebounce(&t_ucHazardWarningLamp,HAZARD_WARNING_LAMP_PIN);
 			ucReserve0          =InputDebounce(&t_ucReserve0,RESERVE0_PIN);
 			ucReserve1          =InputDebounce(&t_ucReserve1,RESERVE1_PIN);
