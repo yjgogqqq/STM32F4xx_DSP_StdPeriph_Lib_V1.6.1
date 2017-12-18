@@ -540,6 +540,15 @@ int DrivingSimulator_DAQ_Main(void)
         {
           TxForAD_FirstSet.Data[i]=ADC_Value[i];
         }
+        //Whell Zero
+        if(90<TxForAD_FirstSet.Data[3])
+				{
+					TxForAD_FirstSet.Data[3]=1;
+				}
+				else
+				{
+					TxForAD_FirstSet.Data[3]=0;
+				}
         TxForAD_FirstSet.Data[1]=PedalValueProcess(180,TxForAD_FirstSet.Data[1]);//acc
         CAN_Transmit(CAN1, &TxForAD_FirstSet);
         
